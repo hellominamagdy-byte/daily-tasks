@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Tasks & Responsibilities</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --card: #131313;
+    --card2: #191919;
+    --border: #222222;
+    --grey-mid: #4a4a4a;
+    --grey-light: #848484;
+    --white: #efefef;
+    --white-dim: #b0b0b0;
+    --af-color: #9b7fd4;
+    --af-soft: rgba(155,127,212,0.1);
+    --af-line: rgba(155,127,212,0.22);
+    --sec-color: #4caf7d;
+    --sec-soft: rgba(76,175,125,0.1);
+    --sec-line: rgba(76,175,125,0.22);
+    --grw-color: #2a9d9f;
+    --grw-soft: rgba(42,157,159,0.1);
+    --grw-line: rgba(42,157,159,0.22);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--black);
+    color: var(--white-dim);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .page-wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 56px 28px 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    margin-bottom: 48px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.55s ease 0.05s forwards;
+  }
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 26px; height: 1px;
+    background: var(--grey-mid);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(28px, 4.5vw, 52px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0em;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+  h1 em { color: var(--grey-mid); font-style: normal; }
+  .co-pills {
+    margin-top: 22px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .co-pill {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+  .co-pill.af  { color: var(--af-color);  border-color: var(--af-line);  background: var(--af-soft); }
+  .co-pill.sec { color: var(--sec-color); border-color: var(--sec-line); background: var(--sec-soft); }
+  .co-pill.grw { color: var(--grw-color); border-color: var(--grw-line); background: var(--grw-soft); }
+
+  /* ── TABS ── */
+  .tabs-wrap {
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.55s ease 0.15s forwards;
+  }
+  .tabs-bar {
+    display: flex;
+    gap: 4px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 5px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 13px 10px;
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { background: var(--card2); }
+  .tab-btn.active.af  { background: var(--af-soft);  box-shadow: inset 0 0 0 1px var(--af-line); }
+  .tab-btn.active.sec { background: var(--sec-soft); box-shadow: inset 0 0 0 1px var(--sec-line); }
+  .tab-btn.active.grw { background: var(--grw-soft); box-shadow: inset 0 0 0 1px var(--grw-line); }
+  .tab-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    transition: color 0.2s;
+  }
+  .tab-btn.active.af  .tab-name { color: var(--af-color); }
+  .tab-btn.active.sec .tab-name { color: var(--sec-color); }
+  .tab-btn.active.grw .tab-name { color: var(--grw-color); }
+  .tab-count {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--grey-mid);
+    opacity: 0.5;
+  }
+  .tab-btn.active .tab-count { opacity: 0.7; }
+
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── FOCUS BANNER ── */
+  .focus-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 36px;
+    border: 1px solid;
+    opacity: 0;
+    animation: fadeUp 0.4s ease 0.02s forwards;
+  }
+  .panel[data-co="af"]  .focus-banner { background: var(--af-soft);  border-color: var(--af-line); }
+  .panel[data-co="sec"] .focus-banner { background: var(--sec-soft); border-color: var(--sec-line); }
+  .panel[data-co="grw"] .focus-banner { background: var(--grw-soft); border-color: var(--grw-line); }
+  .focus-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .panel[data-co="af"]  .focus-dot { background: var(--af-color); }
+  .panel[data-co="sec"] .focus-dot { background: var(--sec-color); }
+  .panel[data-co="grw"] .focus-dot { background: var(--grw-color); }
+  .focus-text {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+  .panel[data-co="af"]  .focus-text { color: var(--af-color); }
+  .panel[data-co="sec"] .focus-text { color: var(--sec-color); }
+  .panel[data-co="grw"] .focus-text { color: var(--grw-color); }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 36px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.42s ease forwards;
+  }
+  .panel.active .section:nth-child(2) { animation-delay: 0.06s; }
+  .panel.active .section:nth-child(3) { animation-delay: 0.12s; }
+  .panel.active .section:nth-child(4) { animation-delay: 0.18s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--grey-mid);
+    flex-shrink: 0;
+    width: 20px;
+  }
+  .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(13px, 2vw, 16px);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    text-transform: uppercase;
+    flex: 1;
+  }
+  .section-tag {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 100px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    color: var(--grey-mid);
+  }
+
+  /* ── TASK LIST ── */
+  .task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 32px;
+  }
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 14px;
+    background: var(--card);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .task-item:hover { border-color: var(--border); background: var(--card2); }
+  .task-arrow {
+    font-size: 11px;
+    color: var(--grey-mid);
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .task-item:hover .task-arrow { transform: translateX(2px); }
+  .panel[data-co="af"]  .task-item:hover .task-arrow { color: var(--af-color); }
+  .panel[data-co="sec"] .task-item:hover .task-arrow { color: var(--sec-color); }
+  .panel[data-co="grw"] .task-item:hover .task-arrow { color: var(--grw-color); }
+  .task-text {
+    font-size: 13px;
+    line-height: 1.65;
+    font-weight: 300;
+    color: var(--grey-light);
+    transition: color 0.2s;
+  }
+  .task-item:hover .task-text { color: var(--white-dim); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+    position: relative;
+  }
+  .section-divider::after {
+    content: attr(data-label);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--black);
+    padding: 0 12px;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .fdots { display: flex; gap: 6px; align-items: center; }
+  .fdot { width: 5px; height: 5px; border-radius: 50%; }
+  .fdot.af  { background: var(--af-color); }
+  .fdot.sec { background: var(--sec-color); }
+  .fdot.grw { background: var(--grw-color); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .page-wrap { padding: 28px 14px 56px; }
+    header { margin-bottom: 28px; padding-bottom: 24px; }
+    .section { margin-bottom: 24px; }
+    .task-list { padding-left: 0; }
+    .section-tag { display: none; }
+    footer { flex-direction: column; align-items: flex-start; }
+    h1 { font-size: 26px; }
+    .tab-btn { padding: 10px 8px; }
+    .tab-name { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header>
+    <div class="eyebrow">Design Team — 3 Companies</div>
+    <h1>Daily Tasks<br><em>&</em> Responsibilities</h1>
+    <div class="co-pills">
+      <span class="co-pill af">Arab Finance</span>
+      <span class="co-pill sec">AF Securities</span>
+      <span class="co-pill grw">GRW</span>
+    </div>
+  </header>
+
+  <div class="tabs-wrap">
+    <div class="tabs-bar">
+      <button class="tab-btn af active" onclick="switchTab('af')">
+        <span class="tab-name">Arab Finance</span>
+        <span class="tab-count">Social · UI/UX Web · SEO</span>
+      </button>
+      <button class="tab-btn sec" onclick="switchTab('sec')">
+        <span class="tab-name">AF Securities</span>
+        <span class="tab-count">Creative · Campaigns · Print</span>
+      </button>
+      <button class="tab-btn grw" onclick="switchTab('grw')">
+        <span class="tab-name">GRW</span>
+        <span class="tab-count">Mobile App UI/UX</span>
+      </button>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════
+         ARAB FINANCE
+    ══════════════════════════════════════ -->
+    <div class="panel active" id="panel-af" data-co="af">
+
+      <div class="focus-banner">
+        <span class="focus-dot"></span>
+        <span class="focus-text">Social Media &amp; Content Design &nbsp;·&nbsp; Website UI/UX &amp; Analytics &nbsp;·&nbsp; Newsletter &amp; SEO</span>
+      </div>
+
+      <!-- Section 01 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">01</span>
+          <h2 class="section-title">Social Media &amp; Content Design</h2>
+          <span class="section-tag">Daily</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design and publish daily posts covering financial news, market updates, and infographics for social media platforms.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Create quote cards and branded graphics aligned with Arab Finance's visual identity.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Follow up on daily content revisions and coordinate with all teams to ensure smooth execution.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 02 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">02</span>
+          <h2 class="section-title">Newsletter Design</h2>
+          <span class="section-tag">Weekly</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design the newsletter layout — structure, typography, imagery, and branded sections aligned with the visual identity.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Prepare and deliver final newsletter files ready for distribution on schedule.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 03 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">03</span>
+          <h2 class="section-title">Sponsored Ads &amp; Advertiser Support</h2>
+          <span class="section-tag">Ongoing</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Prepare and manage sponsored ad designs for advertisers on the Arab Finance website.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Continuously update and maintain advertiser ad codes and placements on the website.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Manage media descriptions and archive links for all advertisers on the platform.</p></li>
+        </ul>
+      </div>
+
+      <div class="section-divider" data-label="UI/UX & Strategy"></div>
+
+      <!-- Section 04 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">04</span>
+          <h2 class="section-title">Website UI/UX Design</h2>
+          <span class="section-tag">Active</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design and improve the full Arab Finance website experience — all screens, pages, and UI components.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Map and optimize user experience flows to ensure smooth navigation and clear content hierarchy.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Deliver wireframes, mockups, and prototypes aligned with the product roadmap.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Coordinate with the development team to ensure accurate design-to-code implementation.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 05 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">05</span>
+          <h2 class="section-title">Analytics &amp; Performance Strategy</h2>
+          <span class="section-tag">Strategic</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Monitor and analyze website and social media performance statistics on a regular basis.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Use data insights to drive design and content decisions — informing every UX and product update.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Work on SEO improvements and optimize page structure and metadata for better organic reach.</p></li>
+        </ul>
+      </div>
+
+    </div><!-- /panel-af -->
+
+
+    <!-- ══════════════════════════════════════
+         AF SECURITIES
+    ══════════════════════════════════════ -->
+    <div class="panel" id="panel-sec" data-co="sec">
+
+      <div class="focus-banner">
+        <span class="focus-dot"></span>
+        <span class="focus-text">Creative Design &nbsp;·&nbsp; Advertising Campaigns &nbsp;·&nbsp; Print &amp; Marketing Materials &nbsp;·&nbsp; Social Media</span>
+      </div>
+
+      <!-- Section 01 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">01</span>
+          <h2 class="section-title">Creative &amp; Social Media Design</h2>
+          <span class="section-tag">Daily</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design and produce all creative assets for AF Securities social media — posts, stories, and branded visuals.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Ensure all designs are consistent with the AF Securities visual identity and brand guidelines.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Execute content according to the marketing and publishing plan, applying daily updates as needed.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 02 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">02</span>
+          <h2 class="section-title">Advertising Campaigns</h2>
+          <span class="section-tag">Ongoing</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design and execute full advertising campaigns for AF Securities from concept to final delivery.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Prepare ad creatives in all required formats and sizes for digital and social placements.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Track campaign progress, apply revisions, and keep all assets updated throughout the campaign lifecycle.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 03 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">03</span>
+          <h2 class="section-title">Print &amp; Marketing Materials</h2>
+          <span class="section-tag">As Needed</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design and produce print materials in all types and sizes — brochures, flyers, rollups, and marketing collateral.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Prepare print-ready files with proper specs, bleeds, and resolution for production.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Maintain a consistent visual language across both digital and print marketing materials.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 04 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">04</span>
+          <h2 class="section-title">Team Coordination &amp; Follow-up</h2>
+          <span class="section-tag">Daily</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Coordinate closely with the marketing and customer service teams to ensure all creative requests are executed correctly.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Track and apply daily design revisions and updates for campaigns and marketing materials.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Manage priorities across simultaneous creative tasks to meet all deadlines efficiently.</p></li>
+        </ul>
+      </div>
+
+    </div><!-- /panel-sec -->
+
+
+    <!-- ══════════════════════════════════════
+         GRW
+    ══════════════════════════════════════ -->
+    <div class="panel" id="panel-grw" data-co="grw">
+
+      <div class="focus-banner">
+        <span class="focus-dot"></span>
+        <span class="focus-text">Mobile Application UI/UX Design &nbsp;·&nbsp; User Flows &nbsp;·&nbsp; Prototyping &nbsp;·&nbsp; Dev Coordination</span>
+      </div>
+
+      <!-- Section 01 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">01</span>
+          <h2 class="section-title">App UI Design &amp; Screen Architecture</h2>
+          <span class="section-tag">Active</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design all GRW app screens and UI components aligned with the product goals and user experience requirements.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Build and organize a complete user flow covering all app journeys and interaction states.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Maintain a consistent design system — typography, colors, spacing, and component library.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 02 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">02</span>
+          <h2 class="section-title">Prototyping &amp; UX Flows</h2>
+          <span class="section-tag">Active</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Create interactive prototypes demonstrating the full app experience for stakeholder review and user testing.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Design and refine UX flows to optimize onboarding, navigation, and key interaction points.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Continuously improve the user experience based on feedback, testing, and product updates.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 03 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">03</span>
+          <h2 class="section-title">Development Coordination</h2>
+          <span class="section-tag">Ongoing</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Coordinate with the development team to ensure accurate and faithful implementation of all UI designs.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Deliver developer-ready design files with full specs, assets, and annotations.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Track any implementation issues and provide design clarifications to resolve them promptly.</p></li>
+        </ul>
+      </div>
+
+      <!-- Section 04 -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-num">04</span>
+          <h2 class="section-title">Project Follow-up &amp; Updates</h2>
+          <span class="section-tag">Daily</span>
+        </div>
+        <ul class="task-list">
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Attend project meetings with Sherif to discuss product updates, required changes, and upcoming milestones.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Track all change requests and new requirements, integrating them smoothly into the design workflow.</p></li>
+          <li class="task-item"><span class="task-arrow">→</span>
+            <p class="task-text">Maintain organized and versioned design files for all GRW app screens and assets.</p></li>
+        </ul>
+      </div>
+
+    </div><!-- /panel-grw -->
+
+  </main>
+
+  <footer>
+    <span>Mina Magdy — Design Division</span>
+    <div class="fdots">
+      <span class="fdot af"></span>
+      <span class="fdot sec"></span>
+      <span class="fdot grw"></span>
+    </div>
+    <span>Daily Responsibilities</span>
+  </footer>
+
+</div>
+
+<script>
+  function switchTab(co) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.tab-btn.' + co).classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('panel-' + co);
+    panel.classList.add('active');
+    panel.querySelectorAll('.section, .focus-banner').forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+</script>
+</body>
+</html>
